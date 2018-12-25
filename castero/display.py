@@ -411,9 +411,9 @@ class Display:
         try:
             # assume urls have http in them
             if "http" in path:
-                feed = Feed(url=path)
+                feed = Feed(url=path, ignore_version = True)
             else:
-                feed = Feed(file=path)
+                feed = Feed(file=path, ignore_version = True)
             if feed.validated:
                 self._feeds[path] = feed
             self._feeds.write()

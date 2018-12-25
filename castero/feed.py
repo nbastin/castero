@@ -42,7 +42,7 @@ class Feed:
     The url for the feed should point to an RSS document.
     """
 
-    def __init__(self, url=None, file=None, **kwargs) -> None:
+    def __init__(self, url=None, file=None, ignore_version = False, **kwargs) -> None:
         """Initializes the object.
 
         A feed can be provided as either a url or a file, but exactly one must
@@ -64,6 +64,7 @@ class Feed:
         self._file = file
         self._tree = None
         self._validated = False
+        self._ignore_version = ignore_version
 
         self._title = kwargs.get('title', None)
         self._description = kwargs.get('description', None)
@@ -177,12 +178,13 @@ class Feed:
             raise FeedStructureError("XML document is not an RSS feed")
 
         # root should have version attribute which equals 2.0
-        if 'version' in self._tree.attrib:
-            if self._tree.attrib['version'] != '2.0':
-                raise FeedStructureError("RSS version is not 2.0")
-        else:
-            raise FeedStructureError(
-                "RSS feed does not have a version attribute")
+        if not self.ignore_version:
+            if 'version' in self._tree.attrib:
+                if self._tree.attrib['version'] != '2.0':
+                    raise FeedStructureError("RSS version is not 2.0")
+            else:
+                raise FeedStructureError(
+                    "RSS feed does not have a version attribute")
 
         # root should have one child, which is the channel tag
         root_children = list(self._tree)
