@@ -178,7 +178,7 @@ class Feed:
             raise FeedStructureError("XML document is not an RSS feed")
 
         # root should have version attribute which equals 2.0
-        if not self.ignore_version:
+        if not self._ignore_version:
             if 'version' in self._tree.attrib:
                 if self._tree.attrib['version'] != '2.0':
                     raise FeedStructureError("RSS version is not 2.0")
